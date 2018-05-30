@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+    <!--<Properties>-->
+        <!--<Property name="PID">????</Property>-->
+        <!--<Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>-->
+        <!--<Property name="LOG_LEVEL_PATTERN">%5p</Property>-->
+        <!--<Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss.SSS</Property>-->
+        <!--<Property name="CONSOLE_LOG_PATTERN">%clr{%d{${LOG_DATEFORMAT_PATTERN}}}{faint} %clr{${LOG_LEVEL_PATTERN}} %clr{${sys:PID}}{magenta} %clr{-&#45;&#45;}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>-->
+        <!--<Property name="FILE_LOG_PATTERN">%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} ${sys:PID} -&#45;&#45; [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>-->
+    <!--</Properties>-->
+    <appenders>
+        <!--<param name="Append" value="true"/>-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--<PatternLayout pattern="%highlight{%d{HH:mm:ss.SSS} %-5level %logger{36}.%M() @%L - %msg%n}{FATAL=Bright Red, ERROR=Bright Magenta, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White}"/>-->
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}  %highlight{%-5p}{FATAL=Bright Magenta, ERROR=Bright Red, WARN=Bright Yellow, INFO=Bright Green, DEBUG=Bright Cyan, TRACE=Bright White} %T\t [%c{15}\t%M:%L\t\t] :   %highlight{%m%n}{FATAL=Bright White, ERROR=Bright Red, WARN=Bright White, INFO=Bright White, DEBUG=Bright Cyan, TRACE=Bright White}"/>
+            <!--<PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}" />-->
+        </Console>
+        <RollingFile name="dlog" fileName="logs/dlog.log" filePattern="logs/dlog-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}  %-5p %T [%c.%M:%L] ~ %m%n"/>
+            <Policies>
+                <!--&lt;!&ndash;<TimeBasedTriggeringPolicy modulate="true" interval="24" />&ndash;&gt;-->
+                <!--<param name="LevelMin" value="DEBUG"/>-->
+            </Policies>
+        </RollingFile>
+        <RollingFile name="derror" fileName="logs/derror.log" filePattern="logs/derror-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}  %-5p %T [%c.%M:%L] ~ %m%n"/>
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <!--&lt;!&ndash;<TimeBasedTriggeringPolicy modulate="true" interval="1"/>&ndash;&gt;-->
+                <!--<TimeBasedTriggeringPolicy modulate="true" interval="24"/>-->
+            </Policies>
+            <!--&lt;!&ndash;限制输出级别 &ndash;&gt;-->
+            <!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+                <!--&lt;!&ndash;<param name="LevelMax" value="error" />&ndash;&gt;-->
+                <!--<param name="LevelMin" value="ERROR"/>-->
+            <!--</filter>-->
+        </RollingFile>
+    </appenders>
+
+    <loggers>
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息 -->
+        <logger name="com.mchange.v2" level="INFO"></logger>
+
+        <root level="trace">
+
+            <appender-ref ref="Console"/>
+            <appender-ref ref="dlog"/>
+            <!--<appender-ref ref="Consolee"/>-->
+            <appender-ref ref="derror"/>
+        </root>
+    </loggers>
+</configuration>
+
+        <!--级别	描述-->
+        <!--ALL	所有级别，包括定制级别。-->
+        <!--DEBUG	指明细致的事件信息，对调试应用最有用。-->
+        <!--ERROR	指明错误事件，但应用可能还能继续运行。-->
+        <!--FATAL	指明非常严重的错误事件，可能会导致应用终止执行。-->
+        <!--INFO	指明描述信息，从粗粒度上描述了应用运行过程。-->
+        <!--OFF	最高级别，用于关闭日志。-->
+        <!--TRACE	比 DEBUG 级别的粒度更细。-->
+        <!--WARN	指明潜在的有害状况。-->
